@@ -1,42 +1,54 @@
 # flask-application
 
+import React, { useState } from 'react';
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Only if you choose to use Axios
+const FileUpload = () => {
+  const [file, setFile] = useState(null);
+  const [response, setResponse] = useState(null);
 
-const ExternalDataDisplay = () => {
-  const [data, setData] = useState([]);
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
 
-  useEffect(() => {
-    // Function to fetch data from the API
-    const fetchData = async () => {
-      try {
-        // Replace 'YOUR_API_ENDPOINT' with the actual API URL
-        const response = await fetch('YOUR_API_ENDPOINT');
-        const data = await response.json();
-        setData(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-    fetchData(); // Call the function to fetch data when the component mounts
-  }, []);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // Replace 'YOUR_API_ENDPOINT' with the actual API URL
+      const response = await fetch('YOUR_API_ENDPOINT', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      setResponse(data);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  };
 
   return (
     <div>
-      <h1>External API Data:</h1>
-      {data.map((item) => (
-        <div key={item.id}>
-          <h3>{item.name}</h3>
-          {/* Display other data fields as needed */}
+      <h1>File Upload</h1>
+      <form onSubmit={handleSubmit}>
+        <input type="file" onChange={handleFileChange} />
+        <button type="submit">Upload</button>
+      </form>
+
+      {response && (
+        <div>
+          <h2>Response:</h2>
+          <pre>{JSON.stringify(response, null, 2)}</pre>
         </div>
-      ))}
+      )}
     </div>
   );
 };
 
-export default ExternalDataDisplay;
+export default FileUpload;
 
 
 import React from 'react';
