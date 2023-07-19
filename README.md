@@ -37,3 +37,17 @@ const ExternalDataDisplay = () => {
 };
 
 export default ExternalDataDisplay;
+
+
+import React from 'react';
+import ExternalDataDisplay from './ExternalDataDisplay';
+
+function App() {
+  return (
+    <div className="App">
+      <ExternalDataDisplay />
+    </div>
+  );
+}
+
+export default App;
